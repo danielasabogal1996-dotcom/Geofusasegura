@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoFusaSegura - Observatorio de Seguridad Ciudadana</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-left">
+            <img src="assets/img/logo.png" alt="Logo GeoFusaSegura" class="logo">
+            <div class="header-title-container">
+                <h1>GeoFusaSegura</h1>
+                <p class="slogan">"Conocer para prevenir, información para una comunidad más segura."</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <span class="update-date"><i class="fa-regular fa-calendar-days"></i> Actualizado: Junio 2026</span>
+            <button class="btn-download"><i class="fa-solid fa-file-arrow-down"></i> Descargar Informe</button>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <button class="nav-btn active"><i class="fa-solid fa-house"></i> Inicio</button>
+        <button class="nav-btn"><i class="fa-solid fa-user-ninja"></i> Hurtos</button>
+        <button class="nav-btn"><i class="fa-solid fa-fire"></i> Mapa de Calor</button>
+        <button class="nav-btn"><i class="fa-solid fa-lightbulb"></i> Alumbrado Público</button>
+        <button class="nav-btn"><i class="fa-solid fa-bus"></i> Transporte Público</button>
+        <button class="nav-btn"><i class="fa-solid fa-video"></i> Cámaras de Seguridad</button>
+        <button class="nav-btn"><i class="fa-solid fa-chart-line"></i> Estadísticas</button>
+        <button class="nav-btn"><i class="fa-solid fa-book"></i> Metodología</button>
+    </nav>
+
+    <main class="dashboard-container">
+        
+        <aside class="panel left-panel">
+            <div class="panel-section">
+                <h2><i class="fa-solid fa-layer-group"></i> CAPAS DISPONIBLES</h2>
+                <div class="layer-list">
+                    <label class="control-container">
+                        <input type="checkbox" id="chk-hurtos" checked>
+                        <span class="checkmark"></span> Hurtos
+                    </label>
+                    <label class="control-container">
+                        <input type="checkbox" id="chk-heatmap">
+                        <span class="checkmark"></span> Mapa de calor
+                    </label>
+                    <label class="control-container">
+                        <input type="checkbox" id="chk-alumbrado">
+                        <span class="checkmark"></span> Alumbrado público
+                    </label>
+                    <label class="control-container">
+                        <input type="checkbox" id="chk-rutas">
+                        <span class="checkmark"></span> Rutas de transporte
+                    </label>
+                    <label class="control-container">
+                        <input type="checkbox" id="chk-paraderos">
+                        <span class="checkmark"></span> Paraderos
+                    </label>
+                    <label class="control-container">
+                        <input type="checkbox" id="chk-camaras">
+                        <span class="checkmark"></span> Cámaras de Seguridad
+                    </label>
+                    <label class="control-container">
+                        <input type="checkbox" id="chk-sectores" checked>
+                        <span class="checkmark"></span> Sectores críticos
+                    </label>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h2><i class="fa-solid fa-clock"></i> FILTROS POR HORARIO</h2>
+                <div class="time-filters">
+                    <button class="time-btn">Mañana</button>
+                    <button class="time-btn">Tarde</button>
+                    <button class="time-btn">Noche</button>
+                    <button class="time-btn">Madrugada</button>
+                    <button class="time-btn active">Todos</button>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h2><i class="fa-solid fa-filter"></i> FILTROS ADICIONALES</h2>
+                <div class="filter-group">
+                    <label for="cmb-comuna">Comuna</label>
+                    <select id="cmb-comuna">
+                        <option value="todos">Todas</option>
+                        <option value="comuna1">Comuna Norte</option>
+                        <option value="comuna2">Comuna Oriental</option>
+                        <option value="comuna3">Comuna Occidental</option>
+                        <option value="comuna4">Comuna Sur</option>
+                        <option value="centro">Centro</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="cmb-barrio">Barrio</label>
+                    <select id="cmb-barrio">
+                        <option value="todos">Todos</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="cmb-sexo">Sexo</label>
+                    <select id="cmb-sexo">
+                        <option value="todos">Todos</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="masculino">Masculino</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="cmb-edad">Edad</label>
+                    <select id="cmb-edad">
+                        <option value="todos">Todos los rangos</option>
+                        <option value="18-25">18 - 25 años</option>
+                        <option value="26-40">26 - 40 años</option>
+                        <option value="41-60">41 - 60 años</option>
+                        <option value="60+">Mayor de 60</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="cmb-modalidad">Modalidad de Hurto</label>
+                    <select id="cmb-modalidad">
+                        <option value="todos">Todas</option>
+                        <option value="atraco">Atraco / Asalto</option>
+                        <option value="cosquilleo">Cosquilleo</option>
+                        <option value="raponeo">Raponeo</option>
+                        <option value="vivienda">Hurto a vivienda</option>
+                    </select>
+                </div>
+            </div>
+        </aside>
+
+        <section class="center-content">
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <span class="kpi-title">Total Encuestas</span>
+                    <span class="kpi-value" id="kpi-encuestas">384</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-title">Total Hurtos Reportados</span>
+                    <span class="kpi-value warning" id="kpi-hurtos">156</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-title">Sectores Críticos</span>
+                    <span class="kpi-value alert" id="kpi-sectores">5</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-title">Periodo Analizado</span>
+                    <span class="kpi-value subtext">2026 - Q1/Q2</span>
+                </div>
+            </div>
+
+            <div id="mapViewDiv">
+                <div class="map-loading">Cargando Geovisor Fusagasugá...</div>
+            </div>
+        </section>
+
+        <aside class="panel right-panel">
+            <h2><i class="fa-solid fa-chart-pie"></i> ANÁLISIS ESTADÍSTICO</h2>
+            
+            <div class="chart-container">
+                <h3>Hurtos por Género</h3>
+                <canvas id="chartGenero"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Hurtos por Edad</h3>
+                <canvas id="chartEdad"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>Modalidad del Hurto</h3>
+                <canvas id="chartModalidad"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>Factores de Inseguridad</h3>
+                <canvas id="chartFactores"></canvas>
+            </div>
+        </aside>
+    </main>
+
+    <section class="findings-section">
+        <h2><i class="fa-solid fa-lightbulb"></i> Hallazgos y Conclusiones Principales</h2>
+        <div class="findings-grid">
+            <div class="finding-card">
+                <div class="finding-icon"><i class="fa-solid fa-moon"></i></div>
+                <h3>Mayor Incidencia Nocturna</h3>
+                <p>El 58% de los incidentes registrados ocurren entre las 18:00 y las 00:00 horas, vinculados a zonas de bajo flujo peatonal.</p>
+            </div>
+            <div class="finding-card">
+                <div class="finding-icon"><i class="fa-solid fa-location-crosshairs"></i></div>
+                <h3>Concentración en el Centro</h3>
+                <p>La zona centro de Fusagasugá registra la mayor densidad de percepción de inseguridad y hurtos bajo la modalidad de atraco.</p>
+            </div>
+            <div class="finding-card">
+                <div class="finding-icon"><i class="fa-solid fa-bus-simple"></i></div>
+                <h3>Transporte y Seguridad</h3>
+                <p>Los entornos cercanos a los paraderos principales muestran picos de criminalidad en los horarios de retorno laboral.</p>
+            </div>
+            <div class="finding-card">
+                <div class="finding-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Presencia Policial vs. Percepción</h3>
+                <p>Zonas con alumbrado deficiente sostienen niveles altos de percepción de inseguridad, indistintamente del patrullaje cuadrante.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="footer-left">
+            <p><strong>Universidad de Manizales</strong> - Especialización en Sistemas de Información Geográfica</p>
+            <p>Proyecto de Grado: <em>Geovisor de Percepción de Insecurity en el Municipio de Fusagasugá</em></p>
+        </div>
+        <div class="footer-right">
+            <p><strong>Autoras:</strong> Karen Daniela Sabogal Cruz & Sonia ...</p>
+            <p><strong>Fuentes:</strong> Datos Geo-referenciados de encuestas comunitarias (Survey123) e Información Institucional.</p>
+        </div>
+    </footer>
+
+    <script src="https://js.arcgis.com/4.29/"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

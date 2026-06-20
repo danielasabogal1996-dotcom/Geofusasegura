@@ -1,0 +1,514 @@
+/* ==========================================================================
+   ESTILOS GENERALES Y CONFIGURACIÓN TEMÁTICA (OBSERVATORIO OSCURO / NEÓN)
+   ========================================================================== */
+:root {
+    --bg-main: #0a0f1d;          /* Negro azulado profundo */
+    --bg-panel: #141b2d;         /* Gris oscuro para contenedores */
+    --bg-card: #1f2942;          /* Gris intermedio para tarjetas y hover */
+    --neon-green: #00ff66;       /* Verde Neón principal */
+    --neon-warning: #ffcc00;     /* Amarillo neón para advertencias */
+    --neon-alert: #ff3366;       /* Rojo/Rosa neón para alertas críticas */
+    --text-main: #ffffff;        /* Texto brillante */
+    --text-muted: #8fa0dd;       /* Texto suavizado gris-azul */
+    --border-color: #26355a;     /* Bordes sutiles de la interfaz */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Scrollbars estilizados estilo cyber */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-green);
+}
+
+/* ==========================================================================
+   ENCABEZADO (HEADER)
+   ========================================================================== */
+.main-header {
+    background-color: var(--bg-panel);
+    border-bottom: 2px solid var(--neon-green);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 255, 102, 0.1);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(0, 255, 102, 0.5));
+}
+
+.header-title-container h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+}
+
+.slogan {
+    font-size: 0.85rem;
+    color: var(--neon-green);
+    font-style: italic;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.update-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.btn-download {
+    background-color: transparent;
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    background-color: var(--neon-green);
+    color: var(--bg-main);
+    box-shadow: 0 0 15px var(--neon-green);
+}
+
+/* ==========================================================================
+   MENÚ DE NAVEGACIÓN SUPERIOR
+   ========================================================================== */
+.main-nav {
+    background-color: var(--bg-main);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 5px;
+    padding: 5px 20px 0 20px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-muted);
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    color: #ffffff;
+    border-bottom-color: var(--border-color);
+}
+
+.nav-btn.active {
+    color: var(--neon-green);
+    border-bottom-color: var(--neon-green);
+    text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+}
+
+/* ==========================================================================
+   CONTENEDOR DASHBOARD GENERAL
+   ========================================================================== */
+.dashboard-container {
+    display: flex;
+    flex: 1;
+    padding: 15px;
+    gap: 15px;
+    height: calc(100vh - 120px); /* Ajuste según altura de header y nav */
+    min-height: 600px;
+}
+
+/* Estilos comunes para Paneles Laterales */
+.panel {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.left-panel { width: 20%; min-width: 250px; }
+.right-panel { width: 22%; min-width: 280px; }
+.center-content { width: 58%; display: flex; flex-direction: column; gap: 15px; }
+
+.panel h2, .right-panel h2 {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    color: #ffffff;
+}
+
+.panel h2 i, .right-panel h2 i {
+    color: var(--neon-green);
+    margin-right: 5px;
+}
+
+.panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ==========================================================================
+   CONTROLES: CHECKBOXES Y FILTROS INTERNOS
+   ========================================================================== */
+.layer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Custom Checkbox Estilo Cyber */
+.control-container {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    user-select: none;
+}
+
+.control-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+}
+
+.control-container:hover input ~ .checkmark {
+    border-color: var(--neon-green);
+}
+
+.control-container input:checked ~ .checkmark {
+    background-color: transparent;
+    border-color: var(--neon-green);
+}
+
+.control-container input:checked ~ {
+    color: #ffffff;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.control-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.control-container .checkmark:after {
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid var(--neon-green);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Filtros por Horario (Botones) */
+.time-filters {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+}
+
+.time-btn {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 8px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-btn:hover {
+    border-color: var(--neon-green);
+    color: #ffffff;
+}
+
+.time-btn.active {
+    background-color: rgba(0, 255, 102, 0.1);
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    font-weight: bold;
+}
+
+.time-btn:last-child {
+    grid-column: span 2;
+}
+
+/* Desplegables / Selects */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.filter-group select {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    padding: 8px;
+    border-radius: 4px;
+    outline: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.filter-group select:focus {
+    border-color: var(--neon-green);
+}
+
+/* ==========================================================================
+   TARJETAS DE CONTROLES KPI
+   ========================================================================== */
+.kpi-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.kpi-card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.kpi-title {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.kpi-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.kpi-value.warning { color: var(--neon-warning); text-shadow: 0 0 5px rgba(255, 204, 0, 0.2); }
+.kpi-value.alert { color: var(--neon-alert); text-shadow: 0 0 5px rgba(255, 51, 102, 0.2); }
+.kpi-value.subtext { font-size: 1rem; color: var(--neon-green); }
+
+/* ==========================================================================
+   MAPA PRINCIPAL (ARCGIS DIV)
+   ========================================================================== */
+#mapViewDiv {
+    flex: 1;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--neon-green);
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+/* Ajustes visuales de herramientas de ArcGIS sobre fondo oscuro */
+.esri-ui .esri-component {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.6) !important;
+}
+
+/* ==========================================================================
+   PANEL DERECHO Y GRÁFICOS (CHART.JS)
+   ========================================================================== */
+.chart-container {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.chart-container h3 {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   SECCIÓN DE HALLAZGOS Y CONCLUSIONES
+   ========================================================================== */
+.findings-section {
+    padding: 25px 20px;
+    background-color: var(--bg-main);
+    border-top: 1px solid var(--border-color);
+}
+
+.findings-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.findings-section h2 i { color: var(--neon-green); margin-right: 8px;}
+
+.findings-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.finding-card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--neon-green);
+    border-radius: 4px;
+    padding: 15px;
+    transition: transform 0.2s ease;
+}
+
+.finding-card:hover {
+    transform: translateY(-3px);
+    background-color: var(--bg-card);
+}
+
+.finding-icon {
+    font-size: 1.3rem;
+    color: var(--neon-green);
+    margin-bottom: 8px;
+}
+
+.finding-card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    color: #ffffff;
+}
+
+.finding-card p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   PIE DE PÁGINA (FOOTER)
+   ========================================================================== */
+.main-footer {
+    background-color: var(--bg-panel);
+    border-top: 1px solid var(--border-color);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: auto;
+}
+
+.main-footer em {
+    color: var(--neon-green);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN BÁSICO
+   ========================================================================== */
+@media (max-width: 1200px) {
+    .dashboard-container {
+        flex-direction: column;
+        height: auto;
+    }
+    .left-panel, .right-panel, .center-content {
+        width: 100%;
+    }
+    #mapViewDiv {
+        height: 500px;
+    }
+    .findings-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .findings-grid {
+        grid-template-columns: 1fr;
+    }
+    .kpi-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
