@@ -3,227 +3,788 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoFusaSegura - Observatorio de Seguridad Ciudadana</title>
-    
+    <title>GEOFUSASEGURA - Geovisor de Seguridad Ciudadana</title>
+    <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
-    <link rel="stylesheet" href="css/style.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js para renderizar los gráficos de forma nativa -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-    <header class="main-header">
-        <div class="header-left">
-            <img src="assets/img/logo.png" alt="Logo GeoFusaSegura" class="logo">
-            <div class="header-title-container">
-                <h1>GeoFusaSegura</h1>
-                <p class="slogan">"Conocer para prevenir, información para una comunidad más segura."</p>
-            </div>
+    <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <!-- No se cambia la ruta del logo original -->
+            <img src="assets/logo.png" alt="GEOFUSASEGURA Logo" class="site-logo">
         </div>
-        <div class="header-right">
-            <span class="update-date"><i class="fa-regular fa-calendar-days"></i> Actualizado: Junio 2026</span>
-            <button class="btn-download"><i class="fa-solid fa-file-arrow-down"></i> Descargar Informe</button>
-        </div>
-    </header>
+        <div class="nav-menu">
+            <!-- aqui inicia el boton de inicio -->
+            <button id="btn-inicio" class="nav-btn active" onclick="switchSection('inicio')"><i class="fa-solid fa-house"></i> Inicio</button>
+            <!-- aqui finaliza el boton de inicio -->
 
-    <nav class="main-nav">
-        <button class="nav-btn active"><i class="fa-solid fa-house"></i> Inicio</button>
-        <button class="nav-btn"><i class="fa-solid fa-user-ninja"></i> Hurtos</button>
-        <button class="nav-btn"><i class="fa-solid fa-fire"></i> Mapa de Calor</button>
-        <button class="nav-btn"><i class="fa-solid fa-lightbulb"></i> Alumbrado Público</button>
-        <button class="nav-btn"><i class="fa-solid fa-bus"></i> Transporte Público</button>
-        <button class="nav-btn"><i class="fa-solid fa-video"></i> Cámaras de Seguridad</button>
-        <button class="nav-btn"><i class="fa-solid fa-chart-line"></i> Estadísticas</button>
-        <button class="nav-btn"><i class="fa-solid fa-book"></i> Metodología</button>
+            <!-- aqui inicia el boton de mapa general -->
+            <button id="btn-mapa" class="nav-btn" onclick="switchSection('mapa')"><i class="fa-solid fa-map"></i> Mapa General</button>
+            <!-- aqui finaliza el boton de mapa general -->
+
+            <!-- aqui inicia el boton de franja horaria -->
+            <button id="btn-franja" class="nav-btn" onclick="switchSection('franja')"><i class="fa-solid fa-clock"></i> Análisis por Franja Horaria</button>
+            <!-- aqui finaliza el boton de franja horaria -->
+
+            <!-- aqui inicia el boton de analisis historico -->
+            <button id="btn-historico" class="nav-btn" onclick="switchSection('historico')">
+                <i class="fa-solid fa-clock-rotate-left"></i> Análisis Histórico
+            </button>
+            <!-- aqui finaliza el boton de analisis historico -->
+
+            <!-- aqui inicia el boton de analisis estadistico -->
+            <button id="btn-estadistico" class="nav-btn" onclick="switchSection('estadistico')"><i class="fa-solid fa-chart-pie"></i> Análisis Estadístico</button>
+            <!-- aqui finaliza el boton de analisis estadistico -->
+
+            <!-- EL BOTÓN DE LUGARES REPORTADOS HA SIDO ELIMINADO SEGÚN LO SOLICITADO -->
+
+            <!-- aqui inicia el boton de hallazgos -->
+            <button id="btn-hallazgos" class="nav-btn" onclick="switchSection('hallazgos')"><i class="fa-solid fa-lightbulb"></i> Hallazgos</button>
+            <!-- aqui finaliza el boton de hallazgos -->
+
+            <!-- aqui inicia el boton de encuesta -->
+            <button id="btn-encuesta" class="nav-btn" onclick="switchSection('encuesta')"><i class="fa-solid fa-file-pen"></i> Encuesta</button>
+            <!-- aqui finaliza el boton de encuesta -->
+        </div>
     </nav>
 
-    <main class="dashboard-container">
-        
-        <aside class="panel left-panel">
-            <div class="panel-section">
-                <h2><i class="fa-solid fa-layer-group"></i> CAPAS DISPONIBLES</h2>
-                <div class="layer-list">
-                    <label class="control-container">
-                        <input type="checkbox" id="chk-hurtos" checked>
-                        <span class="checkmark"></span> Hurtos
-                    </label>
-                    <label class="control-container">
-                        <input type="checkbox" id="chk-heatmap">
-                        <span class="checkmark"></span> Mapa de calor
-                    </label>
-                    <label class="control-container">
-                        <input type="checkbox" id="chk-alumbrado">
-                        <span class="checkmark"></span> Alumbrado público
-                    </label>
-                    <label class="control-container">
-                        <input type="checkbox" id="chk-rutas">
-                        <span class="checkmark"></span> Rutas de transporte
-                    </label>
-                    <label class="control-container">
-                        <input type="checkbox" id="chk-paraderos">
-                        <span class="checkmark"></span> Paraderos
-                    </label>
-                    <label class="control-container">
-                        <input type="checkbox" id="chk-camaras">
-                        <span class="checkmark"></span> Cámaras de Seguridad
-                    </label>
-                    <label class="control-container">
-                        <input type="checkbox" id="chk-sectores" checked>
-                        <span class="checkmark"></span> Sectores críticos
-                    </label>
+    <!-- CONTENEDOR PRINCIPAL DE SECCIONES -->
+    <main class="content-container with-navbar">
+
+        <!-- SECCIÓN 1: INICIO -->
+        <section id="inicio" class="app-section active-section grid-banner-layout">
+            <div class="banner-text-side">
+                <span class="welcome-label">BIENVENIDO A</span>
+                <h1 class="main-brand-title">GEOFUSASEGURA</h1>
+
+                <p class="academic-tag">
+                    Geovisor para el análisis espacial de la percepción ciudadana sobre el hurto en Fusagasugá
+                </p>
+
+                <p class="banner-description">
+                    GeoFusaSegura es un geovisor desarrollado para analizar la distribución espacial de la percepción ciudadana frente al hurto en el municipio de Fusagasugá. La plataforma integra información obtenida mediante encuestas de percepción, herramientas de análisis espacial y visualización cartográfica, con el propósito de apoyar la comprensión de patrones territoriales y facilitar la toma de decisiones basada en evidencia.
+                </p>
+                <p class="banner-description">
+                    Este proyecto fue desarrollado como ejercicio académico en el marco de la Especialización en Sistemas de Información Geográfica, integrando metodologías de análisis geoespacial y representación cartográfica para fortalecer el estudio de la percepción ciudadana desde un enfoque territorial.
+                </p>
+
+                <div class="pillars-container">
+                    <div class="pillar-item">
+                        <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h4>Prevención</h4>
+                        <p>basada en datos</p>
+                    </div>
+                    <div class="pillar-item">
+                        <div class="pillar-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <h4>Análisis</h4>
+                        <p>de percepción</p>
+                    </div>
+                    <div class="pillar-item">
+                        <div class="pillar-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <h4>Territorio</h4>
+                        <p>visualizado</p>
+                    </div>
+                    <div class="pillar-item">
+                        <div class="pillar-icon"><i class="fa-solid fa-users"></i></div>
+                        <h4>Comunidad</h4>
+                        <p>participativa</p>
+                    </div>
+                </div>
+
+                <div class="home-institutional-signature">
+                    <img src="assets/Universidad-de-manizales-logo.jpg" alt="Universidad de Manizales" class="umanizales-logo">
+                    <div class="home-signature-text">
+                        <p class="signature-intro">Proyecto académico desarrollado por</p>
+                        <p><strong>Sonia Carolina Castillo Cabuyo</strong> – Ingeniera Geógrafa y Ambiental.</p>
+                        <p><strong>Karen Daniela Sabogal Cruz</strong> – Ingeniera Geógrafa y Ambiental.</p>
+                        <p>Especialización en Sistemas de Información Geográfica</p>
+                        <p>Universidad de Manizales</p>
+                        <p class="signature-note">Trabajo desarrollado como requisito para optar al título de Especialista en Sistemas de Información Geográfica.</p>
+                    </div>
                 </div>
             </div>
+            <!-- Conserva la ruta e imagen original de la iglesia de fusa -->
+            <div class="banner-image-side"></div>
+        </section>
 
-            <div class="panel-section">
-                <h2><i class="fa-solid fa-clock"></i> FILTROS POR HORARIO</h2>
-                <div class="time-filters">
-                    <button class="time-btn">Mañana</button>
-                    <button class="time-btn">Tarde</button>
-                    <button class="time-btn">Noche</button>
-                    <button class="time-btn">Madrugada</button>
-                    <button class="time-btn active">Todos</button>
-                </div>
-            </div>
-
-            <div class="panel-section">
-                <h2><i class="fa-solid fa-filter"></i> FILTROS ADICIONALES</h2>
-                <div class="filter-group">
-                    <label for="cmb-comuna">Comuna</label>
-                    <select id="cmb-comuna">
-                        <option value="todos">Todas</option>
-                        <option value="comuna1">Comuna Norte</option>
-                        <option value="comuna2">Comuna Oriental</option>
-                        <option value="comuna3">Comuna Occidental</option>
-                        <option value="comuna4">Comuna Sur</option>
-                        <option value="centro">Centro</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="cmb-barrio">Barrio</label>
-                    <select id="cmb-barrio">
-                        <option value="todos">Todos</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="cmb-sexo">Sexo</label>
-                    <select id="cmb-sexo">
-                        <option value="todos">Todos</option>
-                        <option value="femenino">Femenino</option>
-                        <option value="masculino">Masculino</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="cmb-edad">Edad</label>
-                    <select id="cmb-edad">
-                        <option value="todos">Todos los rangos</option>
-                        <option value="18-25">18 - 25 años</option>
-                        <option value="26-40">26 - 40 años</option>
-                        <option value="41-60">41 - 60 años</option>
-                        <option value="60+">Mayor de 60</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="cmb-modalidad">Modalidad de Hurto</label>
-                    <select id="cmb-modalidad">
-                        <option value="todos">Todas</option>
-                        <option value="atraco">Atraco / Asalto</option>
-                        <option value="cosquilleo">Cosquilleo</option>
-                        <option value="raponeo">Raponeo</option>
-                        <option value="vivienda">Hurto a vivienda</option>
-                    </select>
-                </div>
-            </div>
-        </aside>
-
-        <section class="center-content">
-            <div class="kpi-container">
-                <div class="kpi-card">
-                    <span class="kpi-title">Total Encuestas</span>
-                    <span class="kpi-value" id="kpi-encuestas">384</span>
-                </div>
-                <div class="kpi-card">
-                    <span class="kpi-title">Total Hurtos Reportados</span>
-                    <span class="kpi-value warning" id="kpi-hurtos">156</span>
-                </div>
-                <div class="kpi-card">
-                    <span class="kpi-title">Sectores Críticos</span>
-                    <span class="kpi-value alert" id="kpi-sectores">5</span>
-                </div>
-                <div class="kpi-card">
-                    <span class="kpi-title">Periodo Analizado</span>
-                    <span class="kpi-value subtext">2026 - Q1/Q2</span>
-                </div>
-            </div>
-
-            <div id="mapViewDiv">
-                <div class="map-loading">Cargando Geovisor Fusagasugá...</div>
+        <!-- SECCIÓN 2: MAPA GENERAL -->
+        <section id="mapa" class="app-section">
+            <div class="view-wrapper">
+                <iframe src="https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=11a0f4f5ac264f799a9b683e16a02f7a" title="Mapa General"></iframe>
             </div>
         </section>
 
-        <aside class="panel right-panel">
-            <h2><i class="fa-solid fa-chart-pie"></i> ANÁLISIS ESTADÍSTICO</h2>
-            
-            <div class="chart-container">
-                <h3>Hurtos por Género</h3>
-                <canvas id="chartGenero"></canvas>
+        <!-- SECCIÓN 3: FRANJA HORARIA -->
+        <section id="franja" class="app-section franja-container">
+            <div class="interactive-header-franja">
+                <h3>Elige la franja horaria que deseas consultar</h3>
+            </div>
+            <div class="submenu-container">
+                <button class="sub-btn active" onclick="changeFranjaMap('https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=9f239827758f4d6c893a3f8828478535', this, 0)">Madrugada</button>
+                <button class="sub-btn" onclick="changeFranjaMap('https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=2073be63e4b849ffb2946c9545e1a702', this, 1)">Mañana</button>
+                <button class="sub-btn" onclick="changeFranjaMap('https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=4b6775b4b2a242ff8af6969ea420ed0d', this, 2)">Tarde</button>
+                <button class="sub-btn" onclick="changeFranjaMap('https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=a744d7097d8146e881cd3fcace4a96d8', this, 3)">Noche</button>
             </div>
             
-            <div class="chart-container">
-                <h3>Hurtos por Edad</h3>
-                <canvas id="chartEdad"></canvas>
+            <div class="franja-split-layout">
+                <div class="franja-chart-side">
+                    <span class="chart-title">Análisis de Franja Horaria (Casos Totales)</span>
+                    <div class="canvas-container franja-canvas-compact">
+                        <canvas id="chartFranjaInteractiva"></canvas>
+                    </div>
+                    <div class="franja-analysis-card">
+                        <h4><i class="fa-solid fa-chart-column"></i> Análisis de la percepción ciudadana por franja horaria</h4>
+                        <p>De las <strong>385 encuestas</strong> aplicadas, la percepción ciudadana evidencia que la mayor concentración de hurtos ocurre durante la <strong>noche</strong> (141 reportes, 36,6%), seguida de la <strong>tarde</strong> (110 reportes, 28,6%). Esta distribución coincide con el mapa de calor, donde se observan mayores concentraciones espaciales de incidentes en dichos periodos. La <strong>madrugada</strong> y la <strong>mañana</strong> presentan una menor frecuencia de reportes según la percepción de los ciudadanos encuestados.</p>
+                    </div>
+                </div>
+                <div class="view-wrapper-franja">
+                    <iframe id="franja-iframe" src="https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=9f239827758f4d6c893a3f8828478535" title="Mapas de Calor por Franja"></iframe>
+                </div>
+            </div>
+        </section>
+
+    
+   <!-- SECCIÓN ANÁLISIS HISTÓRICO -->
+   <section id="historico" class="app-section historical-scrollable">
+            
+            <div class="hist-cards-container">
+                <div class="hist-kpi-card card-antes">
+                    <span class="kpi-title">ANTES 2020</span>
+                    <div class="kpi-value-row">
+                        <span class="kpi-num">110</span>
+                        <span class="kpi-arrow down">▼</span>
+                    </div>
+                </div>
+                
+                <div class="hist-kpi-card card-durante">
+                    <span class="kpi-title">DURANTE</span>
+                    <div class="kpi-value-row">
+                        <span class="kpi-num">53</span>
+                        <span class="kpi-arrow down">▼</span>
+                    </div>
+                </div>
+                
+                <div class="hist-kpi-card card-despues">
+                    <span class="kpi-title">DESPUÉS</span>
+                    <div class="kpi-value-row">
+                        <span class="kpi-num">222</span>
+                        <span class="kpi-arrow up">▲</span>
+                    </div>
+                </div>
+
+                <div class="hist-hallazgos-card">
+                    <div class="hallazgos-header-inline">
+                        <h4>HALLAZGOS:</h4>
+                    </div>
+                    <ul>
+                        <li>Incidentes aumentaron un 101.8% en pospandemia frente al periodo previo.</li>
+                        <li>La Comuna Norte concentra la mayor percepción de hurto en pospandemia (69 reportes).</li>
+                    </ul>
+                </div>
             </div>
 
-            <div class="chart-container">
-                <h3>Modalidad del Hurto</h3>
-                <canvas id="chartModalidad"></canvas>
+            <div class="hist-maps-section">
+                <h3>COMPARACIÓN ESPACIAL DE LA PERCEPCIÓN DE HURTO</h3>
+                <p class="section-instruction">Mapas dinámicos de calor por etapas de aislamiento</p>
+                
+                <div class="hist-maps-row">
+                    <div class="hist-map-box box-green">
+                        <div class="map-header-tag tag-green">ANTES DE 2020</div>
+                        <div class="iframe-container-wrapper">
+                            <iframe src="https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=ea02d48c7c8041e484b3c519b77833d8"></iframe>
+                        </div>
+                        <div class="map-footer-badge">
+                            <span class="indicator-dot dot-green">●</span> <span class="bold-count">110 casos registrados</span>
+                        </div>
+                    </div>
+
+                    <div class="hist-map-box box-orange">
+                        <div class="map-header-tag tag-orange">DURANTE PANDEMIA</div>
+                        <div class="iframe-container-wrapper">
+                            <iframe src="https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=d01bc96e15fd4195bc03372d0b120417"></iframe>
+                        </div>
+                        <div class="map-footer-badge">
+                            <span class="indicator-dot dot-orange">●</span> <span class="bold-count">53 casos registrados</span>
+                        </div>
+                    </div>
+
+                    <div class="hist-map-box box-red">
+                        <div class="map-header-tag tag-red">DESPUÉS DE PANDEMIA</div>
+                        <div class="iframe-container-wrapper">
+                            <iframe src="https://umanizales.maps.arcgis.com/apps/instant/basic/index.html?appid=190c25c46a34492ba7adb83befc23174"></iframe>
+                        </div>
+                        <div class="map-footer-badge">
+                            <span class="indicator-dot dot-red">●</span> <span class="bold-count">222 casos registrados</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="chart-container">
-                <h3>Factores de Inseguridad</h3>
-                <canvas id="chartFactores"></canvas>
+            <div class="hist-bottom-row-grid">
+                <div class="hist-panel-card hist-panel-chart">
+                    <h4>DISTRIBUCIÓN DE HURTOS POR COMUNAS</h4>
+                    <p class="panel-card-sub">Matriz de datos cruzados obtenidos de la encuesta</p>
+                    <div class="chart-wrapper-canvas hist-comunas-chart">
+                        <canvas id="chartComunasHistoricoFiel"></canvas>
+                    </div>
+                </div>
+
+                <div class="hist-panel-card">
+                    <div class="analysis-card hist-interpretation-card">
+                        <h4><i class="fa-solid fa-chart-pie"></i> Interpretación de la distribución espacial</h4>
+                        <p>El análisis temporal evidencia cambios importantes en la percepción ciudadana del hurto entre los tres periodos evaluados. Antes de la pandemia se registraron <strong>110 reportes</strong>, concentrándose principalmente en las comunas <strong>Centro (27)</strong> y <strong>Norte (25)</strong>.</p>
+                        <p>Durante la pandemia los reportes disminuyeron a <strong>53 casos</strong>, reflejando una reducción generalizada asociada a las restricciones de movilidad.</p>
+                        <p>Sin embargo, en el periodo posterior a la pandemia se observa un incremento significativo hasta alcanzar <strong>222 reportes</strong>, siendo la <strong>Comuna Norte (69 casos)</strong> la de mayor percepción de hurto, seguida por las comunas <strong>Centro (42)</strong> y <strong>Oriental (41)</strong>. Estos resultados evidencian una intensificación de la percepción ciudadana frente al hurto una vez restablecidas las dinámicas normales de movilidad y actividad urbana.</p>
+                    </div>
+                </div>
+
+                <div class="hist-panel-card hist-ficha-resumen">
+                    <h4><i class="fa-solid fa-clipboard-list"></i> FICHA TÉCNICA</h4>
+                    <p class="panel-card-sub">Resumen metodológico</p>
+                    <p class="hist-ficha-text">385 encuestas de percepción ciudadana en Fusagasugá. Los datos reflejan tendencias de percepción, no registros oficiales de criminalidad.</p>
+                    <a href="#" class="hist-ficha-link" onclick="switchSection('estadistico'); return false;"><i class="fa-solid fa-arrow-right"></i> Ver ficha técnica completa</a>
+                </div>
             </div>
-        </aside>
+        </section>
+                       
+        <!-- SECCIÓN 5: ANÁLISIS ESTADÍSTICO -->
+        <section id="estadistico" class="app-section statistical-scrollable">
+            <div class="dashboard-header" style="margin-bottom: 20px;">
+                <h2>Tablero General de Caracterización de Seguridad</h2>
+            </div>
+            
+            <div class="dashboard-grid" style="grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                <div class="chart-box" style="grid-column: span 2;">
+                    <span class="chart-title">Distribución por Comuna</span>
+                    <div class="canvas-container" style="height: 160px;"><canvas id="comunaChart"></canvas></div>
+                    <p class="chart-analysis">La caracterización se realizó a partir de 385 encuestas de percepción ciudadana distribuidas en las seis comunas de Fusagasugá. Los resultados evidencian que la <strong>Comuna Norte</strong> concentra la mayor incidencia reportada con 109 casos (28,31%), seguida por la Comuna Centro (75 casos, 19,48%) y la Comuna Oriental (68 casos, 17,66%). Las comunas Sur Occidental y Occidental registran las menores cifras, con 19 y 46 reportes respectivamente.</p>
+                </div>
+
+                <div class="chart-box" style="grid-column: span 2;">
+                    <span class="chart-title">Población Afectada por Género</span>
+                    <div class="canvas-container" style="height: 160px;"><canvas id="generoChart"></canvas></div>
+                    <p class="chart-analysis">La caracterización se realizó a partir de 385 encuestas de percepción ciudadana. La población encuestada estuvo conformada por hombres, mujeres y personas de otros géneros. Los resultados muestran que el género masculino concentra el mayor porcentaje de personas que manifestaron haber sido víctimas de hurto, representando el <strong>54,03%</strong> de la muestra (208 casos), mientras que el género femenino corresponde al <strong>38,96%</strong> (150 casos).</p>
+                </div>
+
+                <div class="chart-box" style="grid-column: span 2;">
+                    <span class="chart-title">Grupos Vulnerables según Edad</span>
+                    <div class="canvas-container" style="height: 160px;"><canvas id="edadChart"></canvas></div>
+                    <p class="chart-analysis">El análisis por grupos etarios revela que la población entre <strong>29 y 59 años</strong> concentra el mayor número de reportes con 143 casos (37,14%), seguida por el rango de <strong>18 a 28 años</strong> con 139 reportes (36,10%). Los adultos mayores de 60 años registran 60 casos (15,58%) y los menores de 17 años representan el 11,17% de la muestra, evidenciando una mayor vulnerabilidad en la población adulta en edad productiva.</p>
+                </div>
+
+                <div class="chart-box" style="grid-column: span 2;">
+                    <span class="chart-title">Análisis Mensual de Hurto</span>
+                    <div class="canvas-container" style="height: 160px;"><canvas id="mesChart"></canvas></div>
+                    <p class="chart-analysis">El análisis mensual de los 385 reportes evidencia una distribución heterogénea a lo largo del año. <strong>Febrero</strong> registra el pico máximo con 48 casos (12,47%), seguido por marzo (42 casos) y junio (39 casos). Los meses de abril y mayo presentan las menores cifras con 20 y 18 reportes respectivamente, sugiriendo variaciones estacionales en la percepción sobre la ocurrencia de hurtos.</p>
+                </div>
+
+                <div class="chart-box" style="grid-column: span 2;">
+                    <span class="chart-title">Elementos más Hurtados</span>
+                    <div class="canvas-container" style="height: 160px;"><canvas id="hurtoChart"></canvas></div>
+                    <p class="chart-analysis">Entre los bienes reportados como hurtados, el <strong>dinero en efectivo</strong> lidera las pérdidas con 165 registros (26,03% del total de elementos mencionados), seguido por bolsos o morrales (124 casos), celulares (112 casos) y documentos de identidad (94 casos). Este patrón refleja la preferencia delictiva por objetos de fácil conversión y alto valor inmediato en el contexto urbano de Fusagasugá.</p>
+                </div>
+
+                <div class="chart-box" style="grid-column: span 2;">
+                    <span class="chart-title">Modalidad o Mecanismo del Hurto</span>
+                    <div class="canvas-container" style="height: 160px;"><canvas id="modalidadChart"></canvas></div>
+                    <p class="chart-analysis">La modalidad delictiva más frecuente corresponde al uso de <strong>arma blanca</strong> con 85 incidentes (22,08%), seguida de arma de fuego (82 casos) y raponazo (77 casos). La acción a pie representa 39 casos y el engaño 38, evidenciando que la intimidación con armas constituye el mecanismo predominante en la percepción ciudadana de los hurtos en el municipio.</p>
+                </div>
+
+                <div class="chart-box" style="grid-column: span 2;">
+                    <span class="chart-title">Cantidad de Delincuentes</span>
+                    <div class="canvas-container" style="height: 160px;"><canvas id="delincuentesChart"></canvas></div>
+                    <p class="chart-analysis">Respecto al número de agresores involucrados, la delincuencia opera predominantemente en <strong>grupos de 2 personas</strong>, con 199 registros (51,69% de la muestra). Los actos perpetrados por una sola persona suman 99 casos (25,71%) y aquellos con tres o más agresores alcanzan 87 reportes (22,60%), lo que sugiere una estructura delictiva basada principalmente en parejas o dúos.</p>
+                </div>
+
+                <div class="chart-box" style="grid-column: span 2;">
+                    <span class="chart-title">Condiciones que influyen en la percepción de seguridad</span>
+                    <div class="canvas-container" style="height: 160px;"><canvas id="factoresChart"></canvas></div>
+                    <p class="chart-analysis">Entre las condiciones que influyen en la percepción de seguridad ciudadana, la <strong>poca presencia policial</strong> lidera con 239 menciones (34,99% del total de respuestas), seguida por la falta de cámaras de vigilancia (184 menciones, 26,92%) y la insuficiencia de alumbrado público (117 menciones, 17,13%). Estos hallazgos señalan la necesidad de reforzar la infraestructura de seguridad y la presencia institucional en el territorio.</p>
+                </div>
+            </div>
+
+            <div class="ficha-tecnica-card">
+                <div class="ficha-tecnica-header">
+                    <div class="ficha-tecnica-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <div>
+                        <h3>FICHA TÉCNICA</h3>
+                        <p class="ficha-tecnica-subtitle">Metodología de recolección, análisis y limitaciones del estudio</p>
+                    </div>
+                </div>
+
+                <div class="ficha-tecnica-body">
+                    <div class="ficha-tecnica-block">
+                        <div class="ficha-block-icon"><i class="fa-solid fa-flask"></i></div>
+                        <div class="ficha-block-content">
+                            <h4>Metodología</h4>
+                            <p>Los resultados presentados en el geovisor provienen de <strong>385 encuestas de percepción ciudadana</strong> aplicadas mediante trabajo de campo en diferentes sectores del municipio de Fusagasugá.</p>
+                            <p>La recolección de información se realizó mediante recorridos presenciales por las comunas y puntos estratégicos del municipio, buscando obtener una representación espacial de la percepción ciudadana frente al hurto.</p>
+                        </div>
+                    </div>
+
+                    <div class="ficha-tecnica-block ficha-block-highlight">
+                        <div class="ficha-block-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="ficha-block-content">
+                            <h4>Naturaleza de los datos</h4>
+                            <p>Es importante aclarar que los datos corresponden a <strong>percepción ciudadana</strong> y no representan el registro oficial de hechos delictivos.</p>
+                        </div>
+                    </div>
+
+                    <div class="ficha-tecnica-block">
+                        <div class="ficha-block-icon"><i class="fa-solid fa-sliders"></i></div>
+                        <div class="ficha-block-content">
+                            <h4>Factores de influencia en los resultados</h4>
+                            <p>Por esta razón, algunos resultados pueden estar influenciados por factores como:</p>
+                            <ul class="ficha-factor-list">
+                                <li><i class="fa-solid fa-brain"></i> la memoria de los ciudadanos al recordar el evento;</li>
+                                <li><i class="fa-solid fa-comment-dots"></i> la interpretación personal del hecho ocurrido;</li>
+                                <li><i class="fa-solid fa-user-shield"></i> la percepción individual del hurto;</li>
+                                <li><i class="fa-solid fa-map-location-dot"></i> el contexto social y territorial donde fue aplicada la encuesta.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="ficha-tecnica-block">
+                        <div class="ficha-block-icon"><i class="fa-solid fa-map"></i></div>
+                        <div class="ficha-block-content">
+                            <h4>Interpretación de mapas y análisis</h4>
+                            <p>Los mapas y análisis permiten identificar <strong>tendencias espaciales de percepción</strong> y no constituyen una medición exacta de la criminalidad.</p>
+                        </div>
+                    </div>
+
+                    <div class="ficha-tecnica-metrics">
+                        <div class="ficha-metric-item">
+                            <i class="fa-solid fa-file-circle-check"></i>
+                            <div>
+                                <span class="ficha-metric-label">Muestra general</span>
+                                <span class="ficha-metric-value">385 formularios espaciales validados</span>
+                            </div>
+                        </div>
+                        <div class="ficha-metric-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <div>
+                                <span class="ficha-metric-label">Territorio</span>
+                                <span class="ficha-metric-value">Municipio de Fusagasugá</span>
+                            </div>
+                        </div>
+                        <div class="ficha-metric-item">
+                            <i class="fa-solid fa-people-group"></i>
+                            <div>
+                                <span class="ficha-metric-label">Fuente</span>
+                                <span class="ficha-metric-value">Percepción ciudadana (trabajo de campo)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 7: HALLAZGOS -->
+        <section id="hallazgos" class="app-section">
+            <div class="hallazgos-dashboard">
+                <article class="hallazgo-card hallazgo-card--finding">
+                    <header class="hallazgo-card-header">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <h3>Hallazgo 1</h3>
+                    </header>
+                    <p class="hallazgo-card-theme">Concentración espacial en la Comuna Norte</p>
+                    <div class="hallazgo-card-body">
+                        <p>El análisis espacial de las 385 encuestas de percepción ciudadana revela que la <strong>Comuna Norte</strong> concentra la mayor incidencia de hurtos reportados con 109 casos (28,31% del total). Este patrón se mantiene consistente en los tres periodos analizados (antes, durante y después de la pandemia), alcanzando 69 reportes en el periodo pospandemia. La distribución espacial evidencia la necesidad de focalizar estrategias de prevención y vigilancia en esta zona del municipio.</p>
+                    </div>
+                </article>
+
+                <article class="hallazgo-card hallazgo-card--finding">
+                    <header class="hallazgo-card-header">
+                        <i class="fa-solid fa-clock"></i>
+                        <h3>Hallazgo 2</h3>
+                    </header>
+                    <p class="hallazgo-card-theme">Patrón temporal nocturno y vespertino</p>
+                    <div class="hallazgo-card-body">
+                        <p>La distribución por franja horaria muestra que la <strong>noche</strong> concentra el mayor número de incidentes percibidos (141 casos, 36,6%), seguida por la <strong>tarde</strong> (110 casos, 28,6%). Esta tendencia temporal coincide con los mapas de calor por franja horaria, donde se observan mayores concentraciones espaciales durante estos periodos. La madrugada (59 casos) y la mañana (69 casos) presentan menores índices de percepción de hurto.</p>
+                    </div>
+                </article>
+
+                <article class="hallazgo-card hallazgo-card--downloads">
+                    <header class="hallazgo-card-header">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <h3>Descarga de mapas en PDF</h3>
+                    </header>
+                    <p class="hallazgo-card-desc">Descargue los mapas temáticos del geovisor para consulta, impresión o presentaciones académicas.</p>
+                    <div class="hallazgo-pdf-scroll">
+                        <div class="hallazgo-pdf-list">
+                            <a href="assets/02_PDF/001_Distribucion_Hurtos_Madrugada.pdf" download="001_Distribucion_Hurtos_Madrugada.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Distribución de hurtos – Madrugada</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/002_Distribucion_Hurtos_Mañana.pdf" download="002_Distribucion_Hurtos_Mañana.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Distribución de hurtos – Mañana</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/003_Distribucion_Hurtos_Tarde.pdf" download="003_Distribucion_Hurtos_Tarde.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Distribución de hurtos – Tarde</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/004_Distribucion_Hurtos_Noche.pdf" download="004_Distribucion_Hurtos_Noche.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Distribución de hurtos – Noche</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/005_Distribucion_Hurtos_Antes_Pandemia.pdf" download="005_Distribucion_Hurtos_Antes_Pandemia.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Distribución de hurtos – Antes de pandemia</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/006_Distribucion_Hurtos_Durante_Pandemia.pdf" download="006_Distribucion_Hurtos_Durante_Pandemia.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Distribución de hurtos – Durante pandemia</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/007_Distribucion_Hurtos_Despues_Pandemia.pdf" download="007_Distribucion_Hurtos_Despues_Pandemia.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Distribución de hurtos – Después de pandemia</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/008_Mapa_General.pdf" download="008_Mapa_General.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Mapa General</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/010_Postes-Campo.pdf" download="010_Postes-Campo.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Postes – Campo</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/011-Postes-Alcaldia.pdf" download="011-Postes-Alcaldia.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Postes – Alcaldía</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/012_Analisis_Postes_Madrugada.pdf" download="012-Analisis-Luminarias-Madrugada.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Análisis de Luminarias Franja Horaria Madrugada</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                            <a href="assets/02_PDF/013_Analisis_Postes_Noche.pdf" download="012-Analisis-Luminarias-Noche.pdf" class="hallazgo-pdf-item" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hallazgo-pdf-item-text">
+                                    <span class="hallazgo-pdf-name">Análisis de Luminarias Franja Horaria Madrugada</span>
+                                    <span class="hallazgo-pdf-action">Descargar →</span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="hallazgo-card hallazgo-card--finding">
+                    <header class="hallazgo-card-header">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <h3>Hallazgo 4</h3>
+                    </header>
+                    <p class="hallazgo-card-theme">Condiciones que influyen en la percepción de seguridad</p>
+                    <div class="hallazgo-card-body">
+                        <p>Los resultados muestran que la percepción ciudadana frente al hurto no depende únicamente de la ocurrencia de hechos delictivos. La baja presencia policial (34,99%), la escasa cobertura de cámaras de vigilancia (26,94%), la falta de alumbrado público y la existencia de lotes abandonados fueron identificados como los principales factores que incrementan la percepción del riesgo. Estos elementos evidencian la importancia de fortalecer la infraestructura urbana y la presencia institucional como estrategias complementarias para mejorar la seguridad ciudadana.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 8: ENCUESTA -->
+        <section id="encuesta" class="app-section">
+            <div class="view-wrapper">
+                <iframe src="https://arcg.is/8Puj0" title="Encuesta Survey123"></iframe>
+            </div>
+        </section>
+
     </main>
 
-    <section class="findings-section">
-        <h2><i class="fa-solid fa-lightbulb"></i> Hallazgos y Conclusiones Principales</h2>
-        <div class="findings-grid">
-            <div class="finding-card">
-                <div class="finding-icon"><i class="fa-solid fa-moon"></i></div>
-                <h3>Mayor Incidencia Nocturna</h3>
-                <p>El 58% de los incidentes registrados ocurren entre las 18:00 y las 00:00 horas, vinculados a zonas de bajo flujo peatonal.</p>
-            </div>
-            <div class="finding-card">
-                <div class="finding-icon"><i class="fa-solid fa-location-crosshairs"></i></div>
-                <h3>Concentración en el Centro</h3>
-                <p>La zona centro de Fusagasugá registra la mayor densidad de percepción de inseguridad y hurtos bajo la modalidad de atraco.</p>
-            </div>
-            <div class="finding-card">
-                <div class="finding-icon"><i class="fa-solid fa-bus-simple"></i></div>
-                <h3>Transporte y Seguridad</h3>
-                <p>Los entornos cercanos a los paraderos principales muestran picos de criminalidad en los horarios de retorno laboral.</p>
-            </div>
-            <div class="finding-card">
-                <div class="finding-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                <h3>Presencia Policial vs. Percepción</h3>
-                <p>Zonas con alumbrado deficiente sostienen niveles altos de percepción de inseguridad, indistintamente del patrullaje cuadrante.</p>
-            </div>
-        </div>
-    </section>
+    <!-- CONTROLADORES JAVASCRIPT Y PROCESAMIENTO DE GRÁFICAS -->
+    <script>
+        let franjaChartInstance = null;
+        let historicoComunasChart = null;
 
-    <footer class="main-footer">
-        <div class="footer-left">
-            <p><strong>Universidad de Manizales</strong> - Especialización en Sistemas de Información Geográfica</p>
-            <p>Proyecto de Grado: <em>Geovisor de Percepción de Insecurity en el Municipio de Fusagasugá</em></p>
-        </div>
-        <div class="footer-right">
-            <p><strong>Autoras:</strong> Karen Daniela Sabogal Cruz & Sonia ...</p>
-            <p><strong>Fuentes:</strong> Datos Geo-referenciados de encuestas comunitarias (Survey123) e Información Institucional.</p>
-        </div>
-    </footer>
+        const FRANJA_DIM_COLOR = 'rgba(28, 63, 36, 0.35)';
+        const FRANJA_HIGHLIGHT_COLOR = 'rgba(230, 126, 34, 1)';
+        const multiColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#E7E9ED', '#63FF84'];
 
-    <script src="https://js.arcgis.com/4.29/"></script>
-    <script src="js/app.js"></script>
+        function switchSection(sectionId) {
+            document.querySelectorAll('.app-section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+            document.querySelectorAll('.nav-menu .nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active-section');
+            }
+            const activeNavButton = document.getElementById('btn-' + sectionId);
+            if (activeNavButton) {
+                activeNavButton.classList.add('active');
+            }
+            if (sectionId === 'historico') {
+                setTimeout(inicializarGraficaComunasHistorico, 120);
+            }
+        }
+
+        function changeFranjaMap(url, element, highlightIndex) {
+            document.getElementById('franja-iframe').src = url;
+            element.parentNode.querySelectorAll('.sub-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            if (franjaChartInstance) {
+                const baseColors = [FRANJA_DIM_COLOR, FRANJA_DIM_COLOR, FRANJA_DIM_COLOR, FRANJA_DIM_COLOR];
+                baseColors[highlightIndex] = FRANJA_HIGHLIGHT_COLOR;
+                franjaChartInstance.data.datasets[0].backgroundColor = baseColors;
+                franjaChartInstance.update();
+            }
+        }
+
+        function inicializarGraficaComunasHistorico() {
+            const canvas = document.getElementById('chartComunasHistoricoFiel');
+            if (!canvas) return;
+
+            if (historicoComunasChart) {
+                historicoComunasChart.resize();
+                return;
+            }
+
+            historicoComunasChart = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Comuna Norte',
+                        'Comuna Centro',
+                        'Comuna Oriental',
+                        'Comuna Sur Oriental',
+                        'Comuna Occidental',
+                        'Comuna Sur Occidental'
+                    ],
+                    datasets: [
+                        { label: 'ANTES DE 2020', data: [25, 27, 19, 23, 11, 5], backgroundColor: '#2E5A36', borderRadius: 3 },
+                        { label: 'DURANTE PANDEMIA', data: [15, 6, 8, 9, 13, 2], backgroundColor: '#E6A15C', borderRadius: 3 },
+                        { label: 'DESPUÉS DE PANDEMIA', data: [69, 42, 41, 36, 22, 12], backgroundColor: '#E53E3E', borderRadius: 3 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { left: 4, right: 12 } },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { boxWidth: 12, font: { size: 10, weight: '600' }, padding: 10 }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 78,
+                            grid: { color: '#EDF2F7', drawBorder: false },
+                            ticks: { font: { size: 10 }, maxTicksLimit: 5 }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11.5, weight: '600' }, autoSkip: false, padding: 4 }
+                        }
+                    },
+                    datasets: {
+                        bar: {
+                            maxBarThickness: 15,
+                            categoryPercentage: 0.72,
+                            barPercentage: 0.88
+                        }
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const ctxFranja = document.getElementById('chartFranjaInteractiva');
+            if (ctxFranja) {
+                franjaChartInstance = new Chart(ctxFranja.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Madrugada', 'Mañana', 'Tarde', 'Noche'],
+                        datasets: [{
+                            label: 'Cantidad de Incidentes',
+                            data: [59, 69, 110, 141],
+                            backgroundColor: [FRANJA_HIGHLIGHT_COLOR, FRANJA_DIM_COLOR, FRANJA_DIM_COLOR, FRANJA_DIM_COLOR],
+                            borderColor: '#E67E22',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: '#EDF2F7' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            const chartDefaults = { responsive: true, maintainAspectRatio: false };
+
+            const comunaEl = document.getElementById('comunaChart');
+            if (comunaEl) {
+                new Chart(comunaEl.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Centro', 'Norte', 'Occidental', 'Oriental', 'Sur Occidental', 'Sur Oriental'],
+                        datasets: [{ data: [75, 109, 46, 68, 19, 68], backgroundColor: multiColors.slice(0, 6) }]
+                    },
+                    options: chartDefaults
+                });
+            }
+
+            const generoEl = document.getElementById('generoChart');
+            if (generoEl) {
+                new Chart(generoEl.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Femenino', 'Masculino', 'No binario / Otro', 'Prefiero no decirlo'],
+                        datasets: [{ data: [150, 208, 11, 16], backgroundColor: ['#E84A5F', '#3A86C8', '#FFCC29', '#9966FF'] }]
+                    },
+                    options: chartDefaults
+                });
+            }
+
+            const edadEl = document.getElementById('edadChart');
+            if (edadEl) {
+                new Chart(edadEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['60 años o más', 'Entre 18 y 28', 'Entre 29 y 59', 'Menor de 17'],
+                        datasets: [{ label: 'Casos por Edad', data: [60, 139, 143, 43], backgroundColor: ['#FF9F40', '#36A2EB', '#4BC0C0', '#FF6384'] }]
+                    },
+                    options: { ...chartDefaults, indexAxis: 'y', plugins: { legend: { display: false } } }
+                });
+            }
+
+            const mesEl = document.getElementById('mesChart');
+            if (mesEl) {
+                new Chart(mesEl.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{ label: 'Histórico Mensual', data: [27, 48, 42, 20, 18, 39, 23, 34, 34, 37, 38, 25], borderColor: '#FF6384', backgroundColor: 'rgba(255, 99, 132, 0.1)', fill: true, tension: 0.2 }]
+                    },
+                    options: chartDefaults
+                });
+            }
+
+            const hurtoEl = document.getElementById('hurtoChart');
+            if (hurtoEl) {
+                new Chart(hurtoEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Bicicleta', 'Bolso', 'Carro', 'Celular', 'Dinero', 'Documentos', 'Moto', 'Otros'],
+                        datasets: [{ label: 'Elementos Reportados', data: [66, 124, 19, 112, 165, 94, 45, 9], backgroundColor: ['#4BC0C0', '#FF6384', '#FFCE56', '#36A2EB', '#9966FF', '#FF9F40', '#34495E', '#16A085'] }]
+                    },
+                    options: chartDefaults
+                });
+            }
+
+            const modalidadEl = document.getElementById('modalidadChart');
+            if (modalidadEl) {
+                new Chart(modalidadEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['A pie', 'Arma blanca', 'Arma de fuego', 'Motocicleta', 'Vehículo', 'Engaño', 'Raponazo'],
+                        datasets: [{ label: 'Mecanismos Utilizados', data: [39, 85, 82, 51, 13, 38, 77], backgroundColor: ['#2ECC71', '#E74C3C', '#9B59B6', '#F1C40F', '#34495E', '#E67E22', '#1ABC9C'] }]
+                    },
+                    options: { ...chartDefaults, indexAxis: 'y', plugins: { legend: { display: false } } }
+                });
+            }
+
+            const delincuentesEl = document.getElementById('delincuentesChart');
+            if (delincuentesEl) {
+                new Chart(delincuentesEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['1 persona', '2 personas', '3 o más personas'],
+                        datasets: [{ label: 'Número de Agresores', data: [99, 199, 87], backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'] }]
+                    },
+                    options: { ...chartDefaults, plugins: { legend: { display: false } } }
+                });
+            }
+
+            const factoresEl = document.getElementById('factoresChart');
+            if (factoresEl) {
+                new Chart(factoresEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Falta Alumbrado', 'Falta Cámaras', 'Lotes Abandonados', 'Poca Presencia Policial', 'Vías en Mal Estado'],
+                        datasets: [{ label: 'Votos de Incidencia', data: [117, 184, 78, 239, 58], backgroundColor: ['#E74C3C', '#3498DB', '#95A5A6', '#E67E22', '#2ECC71'] }]
+                    },
+                    options: chartDefaults
+                });
+            }
+
+            activarPdfPendientes();
+        });
+
+        async function activarPdfPendientes() {
+            const PDF_BASE = 'assets/02_PDF/';
+            const pendingItems = document.querySelectorAll('.hallazgo-pdf-item--pending[data-pdf-file]');
+
+            pendingItems.forEach((item) => {
+                const file = item.getAttribute('data-pdf-file');
+                const url = PDF_BASE + file;
+
+                fetch(url, { method: 'HEAD', cache: 'no-cache' })
+                    .then((response) => {
+                        if (!response.ok) return;
+
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = file;
+                        link.className = 'hallazgo-pdf-item';
+                        link.target = '_blank';
+                        link.rel = 'noopener';
+                        link.innerHTML = item.innerHTML;
+
+                        const actionEl = link.querySelector('.hallazgo-pdf-action');
+                        if (actionEl) actionEl.textContent = 'Descargar →';
+
+                        item.replaceWith(link);
+                    })
+                    .catch(() => {});
+            });
+        }
+    </script>
 </body>
 </html>
